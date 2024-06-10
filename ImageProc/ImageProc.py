@@ -41,10 +41,38 @@ class ImageProc:
         distCoeff[1, 0] = k2
         distCoeff[2, 0] = p1
         distCoeff[3, 0] = p2
-        distortion = np.float32([[1, 0, 0],
-                                 [0, 1, 0],
-                                 [0.0015, 0.0015, 1]])
+        # distortion = np.float32([[1, 0, 0],
+        #                          [0, 1, 0],
+        #                          [0.0015, 0.0015, 1]])
         # result = cv2.warpPerspective(img, distortion, (rows, cols))
         result = cv2.undistort(img, cam, distCoeff)
         return result
 
+    @staticmethod
+    def color_noise(img, percent_to_brake):
+        row, col, channels = img.shape
+
+        if channels != 3:
+            raise TypeError("Image is not colored\n")
+
+        pixels_for_each_color = int(row * col * percent_to_brake / 3)
+        number_of_pixels = random.randint(pixels_for_each_color, pixels_for_each_color)
+
+        for i in range(number_of_pixels):
+            y_coord = random.randint(0, row - 1)
+            x_coord = random.randint(0, col - 1)
+            img[y_coord][x_coord][0] = 255
+
+        number_of_pixels = random.randint(pixels_for_each_color, pixels_for_each_color)
+        for i in range(number_of_pixels):
+            y_coord = random.randint(0, row - 1)
+            x_coord = random.randint(0, col - 1)
+            img[y_coord][x_coord][1] = 255
+
+        number_of_pixels = random.randint(pixels_for_each_color, pixels_for_each_color)
+        for i in range(number_of_pixels):
+            y_coord = random.randint(0, row - 1)
+            x_coord = random.randint(0, col - 1)
+            img[y_coord][x_coord][2] = 255
+
+        return img
